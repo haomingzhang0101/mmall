@@ -7,12 +7,11 @@ import com.haoming.dao.UserMapper;
 import com.haoming.pojo.User;
 import com.haoming.service.IUserService;
 import com.haoming.util.MD5Util;
-import com.sun.tools.javac.comp.Check;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
+
 import java.util.UUID;
 
 @Service("iUserService")

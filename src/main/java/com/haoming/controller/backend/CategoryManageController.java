@@ -31,7 +31,7 @@ public class CategoryManageController {
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
         }
-        // Check the current user is an admin or not.
+        // Check whether the current user is an admin or not.
         if (iUserService.checkAdminRole(user).isSuccess()) {
             return iCategoryService.addCategory(categoryName, parentId);
         } else {
@@ -54,4 +54,37 @@ public class CategoryManageController {
             return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
         }
     }
+
+    @RequestMapping("get_category.do")
+    @ResponseBody
+    public ServerResponse getChildrenParallelCategory(HttpSession session, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+        }
+        // Check whether the current user is an admin or not.
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            // Query current node.
+            return iCategoryService.getChildrenParallelCategory(categoryId);
+        } else {
+            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+        }
+    }
+
+    @RequestMapping("get_deep_category.do")
+    @ResponseBody
+    public ServerResponse getCategoryAndDeepChildrenCategory(HttpSession session, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+        }
+        // Check whether the current user is an admin or not.
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            // Query current node and sub nodes recursively.
+            return iCategoryService.selectCategoryAndChildrenById(categoryId);
+        } else {
+            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+        }
+    }
+
 }
