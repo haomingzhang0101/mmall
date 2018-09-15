@@ -17,7 +17,7 @@ public class PropertiesUtil {
 
     private static Properties props;
 
-    static {
+    static { // This code block gets executed prior to constructors. Only executes once.
         String fileName = "mmall.properties";
         props = new Properties();
         try {

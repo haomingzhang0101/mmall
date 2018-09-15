@@ -66,12 +66,12 @@ public class CategoryServiceImpl implements ICategoryService {
         return ServerResponse.createBySuccess(categoryList);
     }
 
-    public ServerResponse selectCategoryAndChildrenById(Integer categiryId) {
+    public ServerResponse selectCategoryAndChildrenById(Integer categoryId) {
         Set<Category> categorySet = Sets.newHashSet();
-        findChildCategory(categorySet, categiryId);
+        findChildCategory(categorySet, categoryId);
 
         List<Integer> categoryIdList = Lists.newArrayList();
-        if (categiryId != null) {
+        if (categoryId != null) {
             for (Category categoryItem : categorySet) {
                 categoryIdList.add(categoryItem.getId());
             }
@@ -90,6 +90,7 @@ public class CategoryServiceImpl implements ICategoryService {
         for (Category item : categoryList) {
             findChildCategory(categorySet, item.getId());
         }
+
         return categorySet;
     }
 
