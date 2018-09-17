@@ -3,12 +3,14 @@ package com.haoming.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.haoming.common.Const;
 import com.haoming.common.ResponseCode;
 import com.haoming.common.ServerResponse;
 import com.haoming.dao.CategoryMapper;
 import com.haoming.dao.ProductMapper;
 import com.haoming.pojo.Category;
 import com.haoming.pojo.Product;
+import com.haoming.service.ICategoryService;
 import com.haoming.service.IProductService;
 import com.haoming.util.DateTimeUtil;
 import com.haoming.util.PropertiesUtil;
@@ -29,6 +31,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private ICategoryService iCategoryService;
 
     public ServerResponse saveOrUpdateProduct(Product product) {
         if (product != null) {
@@ -158,4 +163,54 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createBySuccess(pageResult);
     }
 
+    public ServerResponse<ProductDetailVO> getProductDetail(Integer productId) {
+        if (productId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if (product == null || product.getStatus() != Const.ProductStatusEnum.ON_SALE.getCode()) {
+            return ServerResponse.createByErrorMessage("This product has been deleted or not on sale");
+        }
+        // Returns a VO object.
+        ProductDetailVO productDetailVO = assembleProductDetailVO(product);
+        return ServerResponse.createBySuccess(productDetailVO);
+    }
+
+    public ServerResponse<PageInfo> getProductByKeywordCategory(String keyword, Integer categoryId, int pageNum, int pageSize, String orderBy) {
+        if (StringUtils.isBlank(keyword) && categoryId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        List<Integer> categoryIdList = Lists.newArrayList();
+
+        if (categoryId != null) {
+            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            if (category == null && StringUtils.isBlank(keyword)) {
+                PageHelper.startPage(pageNum, pageSize);
+                List<ProductListVO> productListVOList = Lists.newArrayList();
+                PageInfo pageInfo = new PageInfo(productListVOList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
+            categoryIdList = iCategoryService.selectCategoryAndChildrenById(categoryId).getData();
+        }
+        if (StringUtils.isNotBlank(keyword)) {
+            keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        // Dynamic sorting
+        if (StringUtils.isNotBlank(orderBy)) {
+            if (Const.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)) {
+                String[] orderByArray = orderBy.split("_");
+                PageHelper.orderBy(orderByArray[0] + " " + orderByArray[1]);
+            }
+        }
+        List<Product> productList = productMapper.selectByNameAndCategoryIds(StringUtils.isBlank(keyword) ? null : keyword, categoryIdList.size() == 0 ? null : categoryIdList);
+        List<ProductListVO> productListVOList = Lists.newArrayList();
+
+        for (Product item : productList) {
+            productListVOList.add(assembleProductListVO(item));
+        }
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productListVOList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
 }
