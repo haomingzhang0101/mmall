@@ -1,5 +1,8 @@
 package com.haoming.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.haoming.common.ResponseCode;
 import com.haoming.common.ServerResponse;
 import com.haoming.dao.CategoryMapper;
@@ -10,9 +13,12 @@ import com.haoming.service.IProductService;
 import com.haoming.util.DateTimeUtil;
 import com.haoming.util.PropertiesUtil;
 import com.haoming.vo.ProductDetailVO;
+import com.haoming.vo.ProductListVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service("iProductService")
@@ -107,5 +113,49 @@ public class ProductServiceImpl implements IProductService {
         return productDetailVO;
     }
 
+    public ServerResponse<PageInfo> getProductList(int pageNum, int pageSize) {
+        //startPage--start
+        //Add SQL logic
+        //pageHelper--final process
+        PageHelper.startPage(pageNum, pageSize);
+        List<Product> productList = productMapper.selectList();
+        List<ProductListVO> productListVOList = Lists.newArrayList();
+
+        for (Product item : productList) {
+            productListVOList.add(assembleProductListVO(item));
+        }
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productListVOList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
+
+    public ProductListVO assembleProductListVO(Product product) {
+        ProductListVO productListVO = new ProductListVO();
+        productListVO.setId(product.getId());
+        productListVO.setName(product.getName());
+        productListVO.setCategoryId(product.getCategoryId());
+        productListVO.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix", "http://image.haoming.com/"));
+        productListVO.setMainImage(product.getMainImage());
+        productListVO.setPrice(product.getPrice());
+        productListVO.setSubtitle(product.getSubtitle());
+        productListVO.setStatus(product.getStatus());
+        return productListVO;
+    }
+
+    public ServerResponse<PageInfo> searchProduct(String productName, Integer productId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        if (StringUtils.isNotBlank(productName)) {
+            productName = new StringBuilder().append("%").append(productName).append("%").toString();
+        }
+        List<Product> productList = productMapper.selectByNameAndProductId(productName, productId);
+        List<ProductListVO> productListVOList = Lists.newArrayList();
+
+        for (Product item : productList) {
+            productListVOList.add(assembleProductListVO(item));
+        }
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productListVOList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
 
 }
