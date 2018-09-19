@@ -51,10 +51,10 @@
       <if test="checked != null" >
         checked,
       </if>
-      <if test="createTime != null" >
+      <if test="createTime == null" >
         create_time,
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime == null" >
         update_time,
       </if>
     </trim>
@@ -74,10 +74,10 @@
       <if test="checked != null" >
         #{checked,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime == null" >
         now(),
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime == null" >
         now(),
       </if>
     </trim>
@@ -100,7 +100,7 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime == null" >
         update_time = now(),
       </if>
     </set>
@@ -116,4 +116,24 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectCartByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_cart
+    WHERE user_id = #{userId}
+    AND product_id = #{productId}
+  </select>
+
+  <select id="selectCartByUserId" resultMap="BaseResultMap" parameterType="int">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_cart
+    WHERE user_id = #{userId}
+  </select>
+
+  <select id="selectCartProductCheckedStatusByUserId" parameterType="int" resultType="int">
+    SELECT count(1) FROM mmall_cart WHERE checked = 0 AND user_id = #{userId}
+  </select>
+
 </mapper>

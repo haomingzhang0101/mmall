@@ -82,7 +82,7 @@ public class ProductServiceImpl implements IProductService {
         }
         Product product = productMapper.selectByPrimaryKey(productId);
         if (product == null) {
-            return ServerResponse.createByErrorMessage("This product has been deleted or not on sale");
+            return ServerResponse.createByErrorMessage("This item has been deleted.");
         }
 
         // Returns a VO object.
@@ -169,7 +169,7 @@ public class ProductServiceImpl implements IProductService {
         }
         Product product = productMapper.selectByPrimaryKey(productId);
         if (product == null || product.getStatus() != Const.ProductStatusEnum.ON_SALE.getCode()) {
-            return ServerResponse.createByErrorMessage("This product has been deleted or not on sale");
+            return ServerResponse.createByErrorMessage("This item has been deleted or not on sale.");
         }
         // Returns a VO object.
         ProductDetailVO productDetailVO = assembleProductDetailVO(product);

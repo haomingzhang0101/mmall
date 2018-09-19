@@ -61,7 +61,7 @@ public class ProductManageController {
         }
 
         if (iUserService.checkAdminRole(user).isSuccess()) {
-            // Save new product.
+            // Set status.
             return iProductService.setSaleStatus(productId, status);
         } else {
             return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
