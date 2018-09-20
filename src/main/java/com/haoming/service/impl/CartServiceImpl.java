@@ -1,5 +1,6 @@
 package com.haoming.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.haoming.common.Const;
 import com.haoming.common.ResponseCode;
@@ -47,8 +48,46 @@ public class CartServiceImpl implements ICartService {
             cart.setQuantity(count);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
+        return this.list(userId);
+    }
+
+    public ServerResponse<CartVO> update(Integer userId, Integer productId, Integer count) {
+        if (productId == null || count == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
+        if (cart != null) {
+            cart.setQuantity(count);
+        }
+        cartMapper.updateByPrimaryKeySelective(cart);
+        return this.list(userId);
+    }
+
+    public ServerResponse<CartVO> deleteProduct(Integer userId, String productIds) {
+        List<String> productList = Splitter.on(",").splitToList(productIds);
+        if (CollectionUtils.isEmpty(productList)) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        cartMapper.deleteByUserIdProductIds(userId, productList);
+        return this.list(userId);
+    }
+
+    public ServerResponse<CartVO> list(Integer userId) {
         CartVO cartVO = this.getCartVOLimit(userId);
         return ServerResponse.createBySuccess(cartVO);
+    }
+
+    public ServerResponse<CartVO> selectOrUnSelect (Integer userId, Integer productId, Integer checked) {
+        cartMapper.checkedOrUncheckedProduct(userId, productId, checked);
+        return this.list(userId);
+    }
+
+    public ServerResponse<Integer> getCartProductCount(Integer userId) {
+        if (userId == null) {
+            return ServerResponse.createBySuccess(0);
+        }
+        int count = cartMapper.selectCartProductCount(userId);
+        return ServerResponse.createBySuccess(count);
     }
 
     private CartVO getCartVOLimit(Integer userId) {
@@ -104,6 +143,7 @@ public class CartServiceImpl implements ICartService {
         }
         return cartVO;
     }
+
 
     private boolean getAllCheckedStatus(Integer userId) {
         if (userId == null) {
