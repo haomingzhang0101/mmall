@@ -28,7 +28,7 @@ public class FTPUtil {
         FTPUtil ftpUtil = new FTPUtil(ftpIp, 21, ftpUser, ftpPass);
         logger.info("Starting connecting FTP server");
         boolean result = ftpUtil.uploadFile("img", fileList);
-        logger.info("Finish uploading, result:{}");
+        logger.info("Finish uploading, result:{}", result);
         return result;
     }
 
