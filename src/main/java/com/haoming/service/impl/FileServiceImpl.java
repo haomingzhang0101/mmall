@@ -3,6 +3,7 @@ package com.haoming.service.impl;
 import com.google.common.collect.Lists;
 import com.haoming.service.IFileService;
 import com.haoming.util.FTPUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,16 +14,15 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service("iFileService")
+@Slf4j
 public class FileServiceImpl implements IFileService {
-
-    private Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
     public String upload(MultipartFile file, String path) {
         String fileName = file.getOriginalFilename();
         // Extension
         String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
         String uploadFileName = UUID.randomUUID().toString()+"."+fileExtensionName;
-        logger.info("Uploading file:{}, path:{}, new filename:{}", fileName, path, uploadFileName);
+        log.info("Uploading file:{}, path:{}, new filename:{}", fileName, path, uploadFileName);
 
         File fileDir = new File(path);
         if (!fileDir.exists()) {
@@ -40,7 +40,7 @@ public class FileServiceImpl implements IFileService {
             // Delete the file on the local folder.
             targetFile.delete();
         } catch (IOException e) {
-            logger.error("Failed to upload the file.", e);
+            log.error("Failed to upload the file.", e);
             return null;
         }
 
