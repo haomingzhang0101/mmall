@@ -31,6 +31,7 @@ public class CookieUtil {
         Cookie ck = new Cookie(COOKIE_NAME, token);
         ck.setDomain(COOKIE_DOMAIN);
         ck.setPath("/");
+        ck.setHttpOnly(true);
 
         ck.setMaxAge(60 * 60 * 24 *365);
         log.info("Write cookieName:{}, cookieValue:{}", ck.getName(), ck.getValue());
