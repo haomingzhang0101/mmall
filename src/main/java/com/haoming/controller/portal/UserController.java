@@ -102,8 +102,15 @@ public class UserController {
 
     @RequestMapping(value = "reset_password.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> resetPassword(HttpSession session, String passwordNew, String passwordOld) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<String> resetPassword(HttpServletRequest httpServletRequest, String passwordNew, String passwordOld) {
+
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
@@ -112,9 +119,14 @@ public class UserController {
 
     @RequestMapping(value = "update_information.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> updateInformation(HttpSession session, User user) {
+    public ServerResponse<User> updateInformation(HttpServletRequest httpServletRequest, User user) {
         // Prevent from exceeding permission.
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User currentUser = JsonUtil.string2Obj(userJsonStr, User.class);
         if (currentUser == null) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
@@ -123,15 +135,22 @@ public class UserController {
         user.setRole(currentUser.getRole());
         ServerResponse<User> response = iUserService.updateInformation(user);
         if (response.isSuccess()) {
-            session.setAttribute(Const.CURRENT_USER, response.getData());
+//            session.setAttribute(Const.CURRENT_USER, response.getData());
+            RedisPoolUtil.setEx(loginToken, JsonUtil.obj2String(response.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
         }
         return response;
     }
 
     @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> get_information(HttpSession session) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<User> get_information(HttpServletRequest httpServletRequest) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Heading to the login page");
         }

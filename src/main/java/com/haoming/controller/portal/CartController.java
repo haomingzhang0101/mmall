@@ -5,12 +5,17 @@ import com.haoming.common.ResponseCode;
 import com.haoming.common.ServerResponse;
 import com.haoming.pojo.User;
 import com.haoming.service.ICartService;
+import com.haoming.util.CookieUtil;
+import com.haoming.util.JsonUtil;
+import com.haoming.util.RedisPoolUtil;
 import com.haoming.vo.CartVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -22,8 +27,14 @@ public class CartController {
 
     @RequestMapping("list.do")
     @ResponseBody
-    public ServerResponse<CartVO> list(HttpSession session) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> list(HttpServletRequest httpServletRequest) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -32,8 +43,14 @@ public class CartController {
 
     @RequestMapping("add.do")
     @ResponseBody
-    public ServerResponse<CartVO> add(HttpSession session, Integer count, Integer productId) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> add(HttpServletRequest httpServletRequest, Integer count, Integer productId) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -42,8 +59,14 @@ public class CartController {
 
     @RequestMapping("update.do")
     @ResponseBody
-    public ServerResponse<CartVO> update(HttpSession session, Integer count, Integer productId) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> update(HttpServletRequest httpServletRequest, Integer count, Integer productId) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -52,8 +75,14 @@ public class CartController {
 
     @RequestMapping("delete_product.do")
     @ResponseBody
-    public ServerResponse<CartVO> deleteProduct(HttpSession session, String productIds) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> deleteProduct(HttpServletRequest httpServletRequest, String productIds) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -62,8 +91,14 @@ public class CartController {
 
     @RequestMapping("select_all.do")
     @ResponseBody
-    public ServerResponse<CartVO> selectAll(HttpSession session) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> selectAll(HttpServletRequest httpServletRequest) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -72,8 +107,14 @@ public class CartController {
 
     @RequestMapping("un_select_all.do")
     @ResponseBody
-    public ServerResponse<CartVO> unSelectAll(HttpSession session) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> unSelectAll(HttpServletRequest httpServletRequest) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -82,8 +123,14 @@ public class CartController {
 
     @RequestMapping("un_select.do")
     @ResponseBody
-    public ServerResponse<CartVO> unSelect(HttpSession session, Integer productId) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> unSelect(HttpServletRequest httpServletRequest, Integer productId) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -92,8 +139,14 @@ public class CartController {
 
     @RequestMapping("select.do")
     @ResponseBody
-    public ServerResponse<CartVO> select(HttpSession session, Integer productId) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVO> select(HttpServletRequest httpServletRequest, Integer productId) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -102,8 +155,14 @@ public class CartController {
 
     @RequestMapping("get_product_count.do")
     @ResponseBody
-    public ServerResponse<Integer> getProductCount(HttpSession session) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<Integer> getProductCount(HttpServletRequest httpServletRequest) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMessage("Please login first");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
         if (user == null) {
             return ServerResponse.createBySuccess(0);
         }
