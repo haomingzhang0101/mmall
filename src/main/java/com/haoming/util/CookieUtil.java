@@ -33,7 +33,7 @@ public class CookieUtil {
         ck.setPath("/");
         ck.setHttpOnly(true);
 
-        ck.setMaxAge(60 * 60 * 24 *365);
+        ck.setMaxAge(60 * 60 * 24 * 365);
         log.info("Write cookieName:{}, cookieValue:{}", ck.getName(), ck.getValue());
         response.addCookie(ck);
     }
