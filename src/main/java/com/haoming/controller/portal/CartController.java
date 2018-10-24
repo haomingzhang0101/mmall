@@ -7,7 +7,7 @@ import com.haoming.pojo.User;
 import com.haoming.service.ICartService;
 import com.haoming.util.CookieUtil;
 import com.haoming.util.JsonUtil;
-import com.haoming.util.RedisPoolUtil;
+import com.haoming.util.RedisShardedPoolUtil;
 import com.haoming.vo.CartVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -48,7 +48,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -64,7 +64,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -80,7 +80,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -96,7 +96,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -112,7 +112,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -128,7 +128,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -144,7 +144,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -160,7 +160,7 @@ public class CartController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {

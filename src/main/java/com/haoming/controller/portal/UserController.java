@@ -7,7 +7,7 @@ import com.haoming.pojo.User;
 import com.haoming.service.IUserService;
 import com.haoming.util.CookieUtil;
 import com.haoming.util.JsonUtil;
-import com.haoming.util.RedisPoolUtil;
+import com.haoming.util.RedisShardedPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class UserController {
         if (serverResponse.isSuccess()) {
 //            session.setAttribute(Const.CURRENT_USER, serverResponse.getData());
             CookieUtil.writeLoginToken(response, session.getId());
-            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(serverResponse.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
+            RedisShardedPoolUtil.setEx(session.getId(), JsonUtil.obj2String(serverResponse.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
         }
         return serverResponse;
     }
@@ -48,7 +48,7 @@ public class UserController {
     public ServerResponse<User> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         CookieUtil.delLoginToken(httpServletRequest, httpServletResponse);
-        RedisPoolUtil.del(loginToken);
+        RedisShardedPoolUtil.del(loginToken);
 //        session.removeAttribute(Const.CURRENT_USER);
         return ServerResponse.createBySuccess();
     }
@@ -73,7 +73,7 @@ public class UserController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user != null) {
@@ -108,7 +108,7 @@ public class UserController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -125,7 +125,7 @@ public class UserController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User currentUser = JsonUtil.string2Obj(userJsonStr, User.class);
         if (currentUser == null) {
             return ServerResponse.createByErrorMessage("Please login first");
@@ -136,7 +136,7 @@ public class UserController {
         ServerResponse<User> response = iUserService.updateInformation(user);
         if (response.isSuccess()) {
 //            session.setAttribute(Const.CURRENT_USER, response.getData());
-            RedisPoolUtil.setEx(loginToken, JsonUtil.obj2String(response.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
+            RedisShardedPoolUtil.setEx(loginToken, JsonUtil.obj2String(response.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
         }
         return response;
     }
@@ -148,7 +148,7 @@ public class UserController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {

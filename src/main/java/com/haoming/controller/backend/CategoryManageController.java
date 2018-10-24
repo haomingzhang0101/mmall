@@ -8,7 +8,7 @@ import com.haoming.service.ICategoryService;
 import com.haoming.service.IUserService;
 import com.haoming.util.CookieUtil;
 import com.haoming.util.JsonUtil;
-import com.haoming.util.RedisPoolUtil;
+import com.haoming.util.RedisShardedPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +36,7 @@ public class CategoryManageController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -57,7 +57,7 @@ public class CategoryManageController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -79,7 +79,7 @@ public class CategoryManageController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
@@ -101,7 +101,7 @@ public class CategoryManageController {
         if(StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("Please login first");
         }
-        String userJsonStr = RedisPoolUtil.get(loginToken);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
         User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
         if (user == null) {
