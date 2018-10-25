@@ -35,21 +35,7 @@ public class OrderManageController {
     @RequestMapping("list.do")
     @ResponseBody
     public ServerResponse orderList(HttpServletRequest httpServletRequest, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-        if(StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMessage("Please login first");
-        }
-        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-        User user = JsonUtil.string2Obj(userJsonStr, User.class);
-
-        if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
-        }
-        if (iUserService.checkAdminRole(user).isSuccess()) {
-            return iOrderService.manageList(pageNum, pageSize);
-        } else {
-            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
-        }
+        return iOrderService.manageList(pageNum, pageSize);
     }
 
     @RequestMapping("detail.do")
