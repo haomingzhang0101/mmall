@@ -32,88 +32,92 @@ public class CategoryManageController {
     @RequestMapping("add_category.do")
     @ResponseBody
     public ServerResponse addCategory(HttpServletRequest httpServletRequest, String categoryName, @RequestParam(value = "parentId", defaultValue = "0") int parentId) {
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-        if(StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMessage("Please login first");
-        }
-        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-        User user = JsonUtil.string2Obj(userJsonStr, User.class);
-
-        if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
-        }
-        // Check whether the current user is an admin or not.
-        if (iUserService.checkAdminRole(user).isSuccess()) {
-            return iCategoryService.addCategory(categoryName, parentId);
-        } else {
-            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
-        }
+//        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+//        if(StringUtils.isEmpty(loginToken)) {
+//            return ServerResponse.createByErrorMessage("Please login first");
+//        }
+//        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+//        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+//
+//        if (user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+//        }
+//        // Check whether the current user is an admin or not.
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+//            return iCategoryService.addCategory(categoryName, parentId);
+//        } else {
+//            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+//        }
+        return iCategoryService.addCategory(categoryName, parentId);
     }
 
     @RequestMapping("set_category_name.do")
     @ResponseBody
     public ServerResponse setCategory(HttpServletRequest httpServletRequest, Integer categoryId, String categoryName) {
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-        if(StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMessage("Please login first");
-        }
-        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-        User user = JsonUtil.string2Obj(userJsonStr, User.class);
-
-        if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
-        }
-
-        if (iUserService.checkAdminRole(user).isSuccess()) {
-            // Update category name
-            return iCategoryService.updateCategoryName(categoryId, categoryName);
-        } else {
-            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
-        }
+//        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+//        if(StringUtils.isEmpty(loginToken)) {
+//            return ServerResponse.createByErrorMessage("Please login first");
+//        }
+//        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+//        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+//
+//        if (user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+//        }
+//
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+//            // Update category name
+//            return iCategoryService.updateCategoryName(categoryId, categoryName);
+//        } else {
+//            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+//        }
+        return iCategoryService.updateCategoryName(categoryId, categoryName);
     }
 
     @RequestMapping("get_category.do")
     @ResponseBody
     public ServerResponse getChildrenParallelCategory(HttpServletRequest httpServletRequest, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-        if(StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMessage("Please login first");
-        }
-        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-        User user = JsonUtil.string2Obj(userJsonStr, User.class);
-
-        if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
-        }
-        // Check whether the current user is an admin or not.
-        if (iUserService.checkAdminRole(user).isSuccess()) {
-            // Query current node.
-            return iCategoryService.getChildrenParallelCategory(categoryId);
-        } else {
-            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
-        }
+//        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+//        if(StringUtils.isEmpty(loginToken)) {
+//            return ServerResponse.createByErrorMessage("Please login first");
+//        }
+//        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+//        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+//
+//        if (user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+//        }
+//        // Check whether the current user is an admin or not.
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+//            // Query current node.
+//            return iCategoryService.getChildrenParallelCategory(categoryId);
+//        } else {
+//            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+//        }
+        return iCategoryService.getChildrenParallelCategory(categoryId);
     }
 
     @RequestMapping("get_deep_category.do")
     @ResponseBody
     public ServerResponse getCategoryAndDeepChildrenCategory(HttpServletRequest httpServletRequest, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-        if(StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMessage("Please login first");
-        }
-        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-        User user = JsonUtil.string2Obj(userJsonStr, User.class);
-
-        if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
-        }
-        // Check whether the current user is an admin or not.
-        if (iUserService.checkAdminRole(user).isSuccess()) {
-            // Query current node and sub nodes recursively.
-            return iCategoryService.selectCategoryAndChildrenById(categoryId);
-        } else {
-            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
-        }
+//        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+//        if(StringUtils.isEmpty(loginToken)) {
+//            return ServerResponse.createByErrorMessage("Please login first");
+//        }
+//        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+//        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+//
+//        if (user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+//        }
+//        // Check whether the current user is an admin or not.
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+//            // Query current node and sub nodes recursively.
+//            return iCategoryService.selectCategoryAndChildrenById(categoryId);
+//        } else {
+//            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+//        }
+        return iCategoryService.selectCategoryAndChildrenById(categoryId);
     }
 
 }

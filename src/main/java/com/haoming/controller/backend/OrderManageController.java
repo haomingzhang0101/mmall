@@ -41,41 +41,43 @@ public class OrderManageController {
     @RequestMapping("detail.do")
     @ResponseBody
     public ServerResponse orderDetail(HttpServletRequest httpServletRequest, Long orderNo){
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-        if(StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMessage("Please login first");
-        }
-        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-        User user = JsonUtil.string2Obj(userJsonStr, User.class);
-
-        if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
-        }
-        if (iUserService.checkAdminRole(user).isSuccess()) {
-            return iOrderService.manageDetail(orderNo);
-        } else {
-            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
-        }
+//        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+//        if(StringUtils.isEmpty(loginToken)) {
+//            return ServerResponse.createByErrorMessage("Please login first");
+//        }
+//        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+//        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+//
+//        if (user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+//        }
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+//            return iOrderService.manageDetail(orderNo);
+//        } else {
+//            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+//        }
+        return iOrderService.manageDetail(orderNo);
     }
 
     @RequestMapping("search.do")
     @ResponseBody
     public ServerResponse orderSearch(HttpServletRequest httpServletRequest, Long orderNo, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-        if(StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMessage("Please login first");
-        }
-        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-        User user = JsonUtil.string2Obj(userJsonStr, User.class);
-
-        if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
-        }
-        if (iUserService.checkAdminRole(user).isSuccess()) {
-            return iOrderService.manageSearch(orderNo, pageNum, pageSize);
-        } else {
-            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
-        }
+//        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+//        if(StringUtils.isEmpty(loginToken)) {
+//            return ServerResponse.createByErrorMessage("Please login first");
+//        }
+//        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+//        User user = JsonUtil.string2Obj(userJsonStr, User.class);
+//
+//        if (user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "Please login first");
+//        }
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+//            return iOrderService.manageSearch(orderNo, pageNum, pageSize);
+//        } else {
+//            return ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.");
+//        }
+        return iOrderService.manageSearch(orderNo, pageNum, pageSize);
     }
 
     @RequestMapping("send_goods.do")

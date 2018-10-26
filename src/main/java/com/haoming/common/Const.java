@@ -136,4 +136,8 @@ public class Const {
             throw new RuntimeException("Enumerate not found");
         }
     }
+
+    public interface REDIS_LOCK {
+        String CLOSE_ORDER_TASK_LOCK = "CLOSE_ORDER_TASK_LOCK";
+    }
 }

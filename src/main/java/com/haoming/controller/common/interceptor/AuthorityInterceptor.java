@@ -1,5 +1,6 @@
 package com.haoming.controller.common.interceptor;
 
+import com.google.common.collect.Maps;
 import com.haoming.common.Const;
 import com.haoming.common.ServerResponse;
 import com.haoming.pojo.User;
@@ -70,9 +71,24 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             PrintWriter out = httpServletResponse.getWriter();
 
             if (user == null) {
-                out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("Please login first.")));
+                if (StringUtils.equals(className, "ProductManageController") && StringUtils.equals(methodName, "richtext_img_upload")) {
+                    Map resultMap = Maps.newHashMap();
+                    resultMap.put("success", false);
+                    resultMap.put("msg", "Please login an admin account.");
+                    out.print(JsonUtil.obj2String(resultMap));
+                } else {
+                    out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("Please login first.")));
+                }
+
             } else {
-                out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.")));
+                if (StringUtils.equals(className, "ProductManageController") && StringUtils.equals(methodName, "richtext_img_upload")) {
+                    Map resultMap = Maps.newHashMap();
+                    resultMap.put("success", false);
+                    resultMap.put("msg", "You don't have the permission to perform this operation.");
+                    out.print(JsonUtil.obj2String(resultMap));
+                } else {
+                    out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("You don't have the permission to perform this operation.")));
+                }
             }
             out.flush();
             out.close();
