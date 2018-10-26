@@ -43,7 +43,7 @@ public class CloseOrderTask {
         long lockTimeOut = Long.parseLong(PropertiesUtil.getProperty("lock.timeout", "5000"));
         Long setnxResult = RedisShardedPoolUtil.setnx(Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK, String.valueOf(System.currentTimeMillis() + lockTimeOut));
         if (setnxResult != null && setnxResult.intValue() == 1) {
-            closeOrder(Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
+//            closeOrder(Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
         } else {
             // Check timestamp to see whether it is possible to reset the lock
             String lockValueStr = RedisShardedPoolUtil.get(Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
